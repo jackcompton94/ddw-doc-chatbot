@@ -1,0 +1,10 @@
+# created by virtualenv automatically
+bin/
+csvs/
+include/
+jsons/
+lib/
+share/
+pyvenv.cfg
+src/config.py
+
