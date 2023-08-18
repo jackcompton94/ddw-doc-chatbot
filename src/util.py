@@ -70,7 +70,7 @@ def embed_docs(context_data):
             })
 
     # Save data to CSV - CHANGE THE TITLE TO AVOID OVERWRITING YOUR CSV
-    csv_file = "v5_embeddings.csv"
+    csv_file = "../v5_embeddings.csv"
     with open(csv_file, mode="w", newline="") as file:
         header = ["title", "content", "url", "title_embedding", "content_embedding"]
         writer = csv.DictWriter(file, fieldnames=header)
