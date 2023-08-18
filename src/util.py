@@ -1,9 +1,10 @@
-import json
-import openai
 import csv
-import pandas as pd
+import json
 from ast import literal_eval
-import config
+
+import openai
+import pandas as pd
+
 
 # openai.api_key = config.OPENAI_KEY
 
