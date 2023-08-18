@@ -3,21 +3,16 @@ from flask_cors import CORS
 import util
 import bot
 import openai
+import os
+
+port = int(os.environ.get("PORT", 5000))
 
 # Initialize the Flask app with CORS
 app = Flask(__name__)
 CORS(app)
 
-# # ONLY RUN THIS WHEN THE DOCS PAGE IS UPDATED
-# # Crawl the product documentation site
-# crawler.scrape_doc_page('https://docs.data.world/en/98527-product-documentation.html')
-
-# # ONLY RUN THIS WHEN THE DOCS PAGE IS UPDATED
-# # Embed a scraped vx_scrape.json file
-# util.embed_docs('v5_scrape.json')
-
 # Load embeddings into DataFrame at runtime
-embeddings_df = util.load_embeddings_to_df('../csvs/v5_embeddings.csv')
+embeddings_df = util.load_embeddings_to_df('v5_embeddings.csv')
 
 
 @app.route('/get_response', methods=['POST'])
@@ -40,4 +35,5 @@ def get_response():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port=port)
+
