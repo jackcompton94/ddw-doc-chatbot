@@ -7,4 +7,4 @@ lib/
 share/
 pyvenv.cfg
 src/config.py
-
+.idea/

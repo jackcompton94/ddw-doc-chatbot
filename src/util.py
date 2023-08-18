@@ -3,9 +3,6 @@ import openai
 import csv
 import pandas as pd
 from ast import literal_eval
-import config
-
-# openai.api_key = config.OPENAI_KEY
 
 
 # Load json file into memory
