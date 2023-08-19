@@ -2,6 +2,7 @@ import openai
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from src import util
+from src import intent
 
 
 QUESTION_KEYWORDS = ["how", "what", "why", "where", "when",
@@ -97,6 +98,9 @@ def get_response(question, embeddings_df):
     try:
         # Preprocess users question to replace data.world specific shorthand with documented terms
         question = util.preprocess_question(question)
+
+        # Get the intent from the user's query
+        intent.get_intent(question)
 
         # Get the embedding for the user's question
         embed_question = util.get_embedding(question)
