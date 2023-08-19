@@ -8,15 +8,15 @@ from src import intent
 QUESTION_KEYWORDS = ["how", "what", "why", "where", "when",
                      "explain", "describe", "define", "clarify",
                      "understand", "learn", "tell me about",
-                     "details on", "overview of"]
+                     "details on", "overview of", "can", "do"]
 
-COMMAND_KEYWORDS = ["can", "send", "give", "show", "display",
+COMMAND_KEYWORDS = ["send", "give", "show", "display",
                     "list", "provide", "share", "demonstrate",
                     "walk me through", "guide", "help with",
                     "perform", "execute"]
 
 
-def generate_prompt(question, max_similarity, best_title, best_response, best_url):
+def generate_prompt(question, intention, max_similarity, best_title, best_response, best_url):
     confidence_threshold = 0.74
 
     # Check if AI is confident in its response
@@ -31,28 +31,28 @@ def generate_prompt(question, max_similarity, best_title, best_response, best_ur
     elif any(keyword in question.lower() for keyword in QUESTION_KEYWORDS):
         return \
                 f"DOCUMENTATION: {best_title} {best_response}\n URL:{best_url}\n" \
-                f"INSTRUCTIONS: You are a support bot for data.world. Provide concise troubleshooting advice and key steps to address the issue the user is facing in their question below. Support your response with relevant information from the documentation above and provide the URL for reference.\n" \
-                f"QUESTION: {question}\n " \
+                f"INSTRUCTIONS: You are a support bot for data.world. Review the intention below and support your response with relevant information from the documentation above and provide the URL for reference.\n" \
+                f"INTENTION: {intention}\n QUESTION: {question}\n" \
                 f"RESPONSE:"
 
     # Check if the user's input contains keywords indicating a command
     elif any(keyword in question.lower() for keyword in COMMAND_KEYWORDS):
         return \
                 f"DOCUMENTATION: {best_title} {best_response}\n URL:{best_url}\n" \
-                f"INSTRUCTIONS: You are a support bot for data.world. Engage in a friendly conversation and offer assistance by answering the question below. If the user explicitly asks about functionality, features, or how to perform certain tasks, provide guidance by using the documentation above to support your response and provide the URL for reference.\n" \
-                f"QUESTION: {question}\n " \
+                f"INSTRUCTIONS: You are a support bot for data.world. Review the intention below and engage in a friendly conversation and offer assistance by answering the question below. If the user asks about functionality, features, or how to perform certain tasks, provide guidance by using the documentation above to support your response and provide the URL for reference.\n" \
+                f"INTENTION: {intention}\n QUESTION: {question}\n" \
                 f"RESPONSE:"
 
     # Provide a conversational response
     else:
         return \
                 f"DOCUMENTATION: {best_title} {best_response}\n URL:{best_url}\n" \
-                f"INSTRUCTIONS: You are a support bot for data.world. Provide a helpful and engaging response, only use the documentation above if relevant.\n" \
-                f"QUESTION: {question}\n " \
+                f"INSTRUCTIONS: You are a support bot for data.world. Review the intention below and provide a helpful and engaging response, use the documentation above and provide the link.\n" \
+                f"INTENTION: {intention}\n QUESTION: {question}\n" \
                 f"RESPONSE:"
 
 
-def get_best_response(question, embeddings_df, embed_question):
+def get_best_response(question, intention, embeddings_df, embed_question, embed_intention):
     # Initialize a list to store similarity scores
     similarities = []
 
@@ -62,18 +62,25 @@ def get_best_response(question, embeddings_df, embed_question):
         embedding_title = np.array(row['title_embedding'])
         embedding_content = np.array(row['content_embedding'])
 
-        # Calculate the cosine similarity between user's question and current title embedding
+        # Calculate the cosine similarity between user's question and current title/content embedding
         similarity_title = cosine_similarity([embed_question], [embedding_title])[0][0]
-
-        # Calculate the cosine similarity between user's question and current content embedding
         similarity_content = cosine_similarity([embed_question], [embedding_content])[0][0]
 
-        # Weights can be adjusted to tune the importance of either the title or content
+        # Calculate cosine similarity between intention embedding and title/content embedding
+        similarity_intention_title = cosine_similarity([embed_intention], [embedding_title])[0][0]
+        similarity_intention_content = cosine_similarity([embed_intention], [embedding_content])[0][0]
+
+        # Weights to tune the importance of either the title, content, or intention (total = 1.0)
         title_weight = 0.3
-        content_weight = 0.7
+        content_weight = 0.5
+        intention_weight = 0.2
 
         # Combine the similarity scores
-        combined_similarity = title_weight * similarity_title + content_weight * similarity_content
+        combined_similarity = (
+            title_weight * similarity_title +
+            content_weight * similarity_content +
+            intention_weight * (similarity_intention_title + similarity_intention_content)
+        )
 
         # Append the combined similarity score to the list
         similarities.append(combined_similarity)
@@ -88,10 +95,10 @@ def get_best_response(question, embeddings_df, embed_question):
 
     max_similarity = max(similarities)
 
-    # Log to console the max similarity score (testing)
-    print(max_similarity)
+    # TODO: Log to console the max similarity score
+    print(f"max similarity: {max_similarity}")
 
-    return generate_prompt(question, max_similarity, best_title, best_response, best_url)
+    return generate_prompt(question, intention, max_similarity, best_title, best_response, best_url)
 
 
 def get_response(question, embeddings_df):
@@ -100,13 +107,14 @@ def get_response(question, embeddings_df):
         question = util.preprocess_question(question)
 
         # Get the intent from the user's query
-        intent.get_intent(question)
+        intention = intent.get_intent(question)
 
-        # Get the embedding for the user's question
+        # Get the embedding for the user's question and intention
         embed_question = util.get_embedding(question)
+        embed_intention = util.get_embedding(intention)
 
         # Generate the appropriate prompt for the user's question
-        prompt = get_best_response(question, embeddings_df, embed_question)
+        prompt = get_best_response(question, intention, embeddings_df, embed_question, embed_intention)
 
         # Generate response from OpenAI
         response = openai.Completion.create(
