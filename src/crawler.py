@@ -3,11 +3,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from src import util
 import time
 import json
 
 
-def extract_page_content(url):
+def extract_page_content(url, json_file_path):
     # Initialize Selenium web driver
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
@@ -46,7 +47,7 @@ def extract_page_content(url):
         }
 
         print(page_data)
-        add_page(page_data)
+        add_page(page_data, json_file_path)
         return page_data
 
     finally:
@@ -54,7 +55,7 @@ def extract_page_content(url):
         driver.quit()
 
 
-def fetch_links_from_page(url):
+def fetch_links_from_page(url, json_file_path):
     # Initialize Selenium web driver
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
@@ -81,7 +82,7 @@ def fetch_links_from_page(url):
         all_page_data = []
 
         # Extract the page content
-        page_data = extract_page_content(url)
+        page_data = extract_page_content(url, json_file_path)
         if page_data['content']:
             all_page_data.append(page_data)
 
@@ -94,7 +95,7 @@ def fetch_links_from_page(url):
                 print(f"Visiting URL: {link}")
 
                 # Recursively call the function for sub links
-                sub_page_data = fetch_links_from_page(link)
+                sub_page_data = fetch_links_from_page(link, json_file_path)
 
                 # Add the URL to each sub-page data entry
                 for entry in sub_page_data:
@@ -111,15 +112,21 @@ def fetch_links_from_page(url):
 
 
 def scrape_doc_page(doc_url):
+    # Named json_file to embed from and the embeddings csv to append to
+    json_file_path = './jsons/bb_bot_scrape.json'
+    embeddings_csv_path = './csvs/embeddings.csv'
+
     # Recursively crawls through each main doc link and extracts the page content
-    fetch_links_from_page(doc_url)
+    fetch_links_from_page(doc_url, json_file_path)
+
+    util.update_embeddings(json_file_path, embeddings_csv_path)
 
 
-def add_page(page):
+def add_page(page, json_file_path):
     # Read existing JSON data from the file
     existing_data = []
     try:
-        with open('v5_scrape.json', 'r') as json_file:
+        with open(json_file_path, 'r') as json_file:
             existing_data = json.load(json_file)
     except FileNotFoundError:
         pass
@@ -128,5 +135,5 @@ def add_page(page):
     existing_data.append(page)
 
     # Write the updated data back to the file
-    with open('v5_scrape.json', 'w') as json_file:
+    with open(json_file_path, 'w') as json_file:
         json.dump(existing_data, json_file, indent=2)

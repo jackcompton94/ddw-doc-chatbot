@@ -3,22 +3,18 @@ from flask_cors import CORS
 from src import util
 from src import bot_functions
 from src import config
+from src import crawler
 import openai
 
 # Initialize the Flask app with CORS
 app = Flask(__name__)
 CORS(app)
 
-# # ONLY RUN THIS WHEN THE DOCS PAGE IS UPDATED
-# # Crawl the product documentation site
-# crawler.scrape_doc_page('https://docs.data.world/en/98527-product-documentation.html')
-
-# # ONLY RUN THIS WHEN THE DOCS PAGE IS UPDATED
-# # Embed a scraped vx_scrape.json file
-# util.embed_docs('v5_scrape.json')
+# # Crawl, scrape, embed, and store a doc page locally
+# crawler.scrape_doc_page('https://docs.data.world/en/160693-using-hoots-and-bb-bots-for-data-ops.html')
 
 # Load embeddings into DataFrame at runtime
-embeddings_df = util.load_embeddings_to_df('./csvs/v5_embeddings.csv')
+embeddings_df = util.load_embeddings_to_df('./csvs/embeddings.csv')
 
 
 @app.route('/get_response', methods=['POST'])
