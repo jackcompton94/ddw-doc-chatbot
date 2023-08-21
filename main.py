@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from src import util
-from src import bot
+from src import bot_functions
 from src import config
 import openai
 
@@ -31,7 +31,7 @@ def get_response():
     openai.api_key = config.OPENAI_KEY
 
     # Get the bots response
-    response = bot.get_response(question, embeddings_df)
+    response = bot_functions.get_response(question, embeddings_df)
 
     # TODO: move to a dataset for persistent data later on
     print(f"question: {question}")
