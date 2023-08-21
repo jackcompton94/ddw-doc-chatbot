@@ -6,8 +6,8 @@ from ast import literal_eval
 
 
 # Load json file into memory
-def load_json(file):
-    with open(file, 'r') as json_file:
+def load_json(file_path):
+    with open(file_path, 'r') as json_file:
         data = json.load(json_file)
     return data
 
@@ -30,14 +30,14 @@ def get_embedding(text):
     return openai.Embedding.create(input=[text], model=model)['data'][0]['embedding']
 
 
-# Embeds the vX_scrape.json file and loads to CSV
-def embed_docs(context_data):
+# Embeds an entire vX_scrape.json file and loads to CSV
+def embed_docs(context_data, csv_file_path):
     data = []
     max_tokens = 8191
 
-    file = load_json(context_data)
+    json_file = load_json(context_data)
 
-    for row in file:
+    for row in json_file:
         title = row['title']
         content = row['content']
         url = row['url']
@@ -61,7 +61,7 @@ def embed_docs(context_data):
                 "title_embedding": title_embedding,
                 "content_embedding": content_embedding
             })
-            print({
+            print("saving embeddings:", {
                 "title": title,
                 "content": content,
                 "url": url,
@@ -69,14 +69,66 @@ def embed_docs(context_data):
                 "content_embedding": content_embedding
             })
 
-    # Save data to CSV - CHANGE THE TITLE TO AVOID OVERWRITING YOUR CSV
-    csv_file = "../v5_embeddings.csv"
-    with open(csv_file, mode="w", newline="") as file:
+    # Save data to CSV
+    with open(csv_file_path, mode="w", newline="") as file:
         header = ["title", "content", "url", "title_embedding", "content_embedding"]
         writer = csv.DictWriter(file, fieldnames=header)
 
         writer.writeheader()
         writer.writerows(data)
+
+
+# Update embeddings CSV with the latest json scrape
+def update_embeddings(context_data, csv_file_path):
+    max_tokens = 8191
+
+    existing_titles = set()  # To keep track of existing titles
+
+    # Read existing titles from the CSV file
+    with open(csv_file_path, mode="r", newline="") as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            existing_titles.add(row["title"])
+
+    new_data = []
+
+    json_file = load_json(context_data)
+
+    for row in json_file:
+        title = row['title']
+        content = row['content']
+        url = row['url']
+
+        if title.strip() and content.strip() and title not in existing_titles:
+            title = title[:max_tokens]
+            content = content[:max_tokens]
+
+            title_embedding = get_embedding(title)
+            content_embedding = get_embedding(content)
+
+            new_data.append({
+                "title": title,
+                "content": content,
+                "url": url,
+                "title_embedding": title_embedding,
+                "content_embedding": content_embedding
+            })
+            print("saving embeddings:", {
+                "title": title,
+                "content": content,
+                "url": url,
+                "title_embedding": title_embedding,
+                "content_embedding": content_embedding
+            })
+
+            # Add the new title to the set of existing titles
+            existing_titles.add(title)
+
+    # Append new data with embeddings to the existing CSV file
+    with open(csv_file_path, mode="a", newline="") as file:
+        header = ["title", "content", "url", "title_embedding", "content_embedding"]
+        writer = csv.DictWriter(file, fieldnames=header)
+        writer.writerows(new_data)
 
 
 # Replace data.world specific terms/context to help tune the prompt engine

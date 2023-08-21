@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from src import util
-from src import bot
+from src import bot_functions
 import openai
 import os
 
@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load embeddings into DataFrame at runtime
-embeddings_df = util.load_embeddings_to_df('v5_embeddings.csv')
+embeddings_df = util.load_embeddings_to_df('embeddings.csv')
 
 
 @app.route('/get_response', methods=['POST'])
@@ -25,7 +25,7 @@ def get_response():
     openai.api_key = api_key
 
     # Get the bots response
-    response = bot.get_response(question, embeddings_df)
+    response = bot_functions.get_response(question, embeddings_df)
 
     # TODO: move to a dataset for persistent data later on
     print(f"question: {question}")
