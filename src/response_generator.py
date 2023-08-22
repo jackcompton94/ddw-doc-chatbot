@@ -3,7 +3,7 @@ from src import similarity_calculator
 QUESTION_KEYWORDS = ["how", "what", "why", "where", "when",
                      "explain", "describe", "define", "clarify",
                      "understand", "learn", "tell me about",
-                     "details on", "overview of", "can", "do"]
+                     "details on", "overview of", "can", "do", "is there"]
 
 COMMAND_KEYWORDS = ["send", "give", "show", "display",
                     "list", "provide", "share", "demonstrate",
