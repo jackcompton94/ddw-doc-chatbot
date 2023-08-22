@@ -3,6 +3,9 @@ from src import util
 from src import intent_generator
 from src import response_generator
 
+# Initialize an empty conversation
+conversation = []
+
 
 def get_response(question, embeddings_df):
     try:
@@ -18,6 +21,26 @@ def get_response(question, embeddings_df):
 
         # Generate the appropriate prompt for the user's question
         prompt = response_generator.get_best_response(question, intention, embeddings_df, embed_question, embed_intention)
+
+        # # Add user's input to the conversation
+        # conversation.append({"role": "user", "content": question})
+        #
+        # # Add bot's prompt to the conversation
+        # conversation.append({"role": "assistant", "content": prompt})
+        #
+        # # Generate response from OpenAI in a conversation context
+        # response = openai.ChatCompletion.create(
+        #     model="gpt-3.5-turbo",
+        #     messages=conversation,
+        #     max_tokens=250,
+        #     temperature=0
+        # )
+        #
+        # # Extract the assistant's response
+        # assistant_response = response.choices[0].message['content']
+        #
+        # # Return the generated response
+        # return assistant_response.strip()
 
         # Generate response from OpenAI
         response = openai.Completion.create(

@@ -9,7 +9,8 @@ def get_intent(question):
         "- Your goal is to determine the underlying intent of the user's query.\n"
         "- Respond in 3 words or less to describe the intent clearly.\n"
         "- Consider the context and use concise language.\n"
-        "\n\nCLASSIFICATION:"
+        "- Feel free to respond with an intent that is better than any present below if needed"
+        "\n\nRESPONSE:\n"
     )
 
     # Generate response from OpenAI
@@ -19,8 +20,8 @@ def get_intent(question):
             {"role": "system", "content": content},
             {"role": "user", "content": question},
         ],
-        max_tokens=500,
-        temperature=0
+        max_tokens=50,
+        temperature=0.5
     )
 
     intent = response.choices[0].message['content']

@@ -17,13 +17,13 @@ MISC_INTENTS = ["unclear", "greeting", "introduction", "identification",
 
 
 def generate_prompt(question, intention, max_similarity, best_title, best_response, best_url):
-    confidence_threshold = 0.75
+    confidence_threshold = 0.775
 
     # Check if AI is confident in its response
     if max_similarity < confidence_threshold:
 
         # Low confidence suggests to check the docs directly and reach out to the support team
-        return f"INSTRUCTIONS: You are a support bot for data.world. You are unsure of the answer, refer users to our support team for personalized assistance: https://support.data.world\n" \
+        return f"INSTRUCTIONS: You are a support bot for data.world. DO NOT ANSWER THE QUESTION, refer users to our support team for personalized assistance: https://support.data.world\n" \
                f"QUESTION: {question}\n" \
                f"RESPONSE:"
 
