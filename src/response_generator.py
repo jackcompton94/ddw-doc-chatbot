@@ -17,7 +17,7 @@ MISC_INTENTS = ["unclear", "greeting", "introduction", "identification",
 
 
 def generate_prompt(question, intention, max_similarity, best_title, best_response, best_url):
-    confidence_threshold = 0.75
+    confidence_threshold = 0.775
 
     # Check if AI is confident in its response
     if max_similarity < confidence_threshold:
