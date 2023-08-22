@@ -3,7 +3,7 @@ from src import similarity_calculator
 QUESTION_KEYWORDS = ["how", "what", "why", "where", "when",
                      "explain", "describe", "define", "clarify",
                      "understand", "learn", "tell me about",
-                     "details on", "overview of", "can", "do"]
+                     "details on", "overview of", "can", "do", "is there"]
 
 COMMAND_KEYWORDS = ["send", "give", "show", "display",
                     "list", "provide", "share", "demonstrate",
@@ -12,8 +12,7 @@ COMMAND_KEYWORDS = ["send", "give", "show", "display",
 
 MISC_INTENTS = ["unclear", "greeting", "introduction", "identification",
                 "explaining capabilities", "feature inquiry", "clarify intent",
-                "request for assistance", "seeking clarification"
-                ]
+                "request for assistance", "seeking clarification"]
 
 
 def generate_prompt(question, intention, max_similarity, best_title, best_response, best_url):
