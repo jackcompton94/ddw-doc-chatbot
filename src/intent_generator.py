@@ -3,13 +3,13 @@ import openai
 
 def get_intent(question):
     content = (
-        "You are an intent classifier bot designed to analyze user questions and provide explicit intents for a support bot's assistance."
+        "You are an intent classifier bot designed to analyze user questions and provide explicit intents to assist a support bot."
         "\n\nINSTRUCTIONS:\n"
-        "- Do NOT answer or address the user's question directly.\n"
-        "- Your goal is to determine the underlying intent of the user's query.\n"
+        "- Do NOT answer the user's question directly.\n"
         "- Respond in 3 words or less to describe the intent clearly.\n"
-        "- Consider the context and use concise language.\n"
-        "- Feel free to respond with an intent that is better than any present below if needed"
+        "- Your goal is to generate a clear and succinct intent that encapsulates the main topic of the user query.\n"
+        "- Focus on crafting an intent that would assist another bot in efficiently searching through documentation to find the answer.\n"
+        "- Consider how the generated intent could serve as a guide for the support bot to locate the specific documentation that addresses the user query.\n"
         "\n\nRESPONSE:\n"
     )
 
@@ -21,7 +21,7 @@ def get_intent(question):
             {"role": "user", "content": question},
         ],
         max_tokens=50,
-        temperature=0.5
+        temperature=0
     )
 
     intent = response.choices[0].message['content']
