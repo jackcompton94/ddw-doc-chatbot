@@ -48,7 +48,7 @@ def get_response(question, embeddings_df):
         response = openai.Completion.create(
             engine="text-davinci-003",
             prompt=prompt,
-            max_tokens=250,
+            max_tokens=2000,
             temperature=0
         )
 
