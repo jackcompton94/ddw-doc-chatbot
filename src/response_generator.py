@@ -10,28 +10,29 @@ COMMAND_KEYWORDS = ["send", "give", "show", "display",
                     "walk me through", "guide", "help with",
                     "perform", "execute"]
 
-MISC_INTENTS = ["unclear", "greeting", "introduction", "identification",
-                "explaining capabilities", "feature inquiry", "clarify intent",
-                "request for assistance", "seeking clarification"]
+MISC_INTENTS = ["unclear", "no intent", "no intent detected",
+                "greeting", "introduction", "identification", "identity",
+                "about bot", "explaining capabilities", "clarify intent",
+                "request for assistance", "seeking clarification", "introduction request"]
 
 
 def generate_prompt(question, intention, max_similarity, best_title, best_response, best_url):
     confidence_threshold = 0.775
 
-    # Check if AI is confident in its response
-    if max_similarity < confidence_threshold:
-
-        # Low confidence suggests to check the docs directly and reach out to the support team
-        return f"INSTRUCTIONS: You are a support bot for data.world. You are unsure of the answer, refer users to our support team for personalized assistance: https://support.data.world\n" \
-               f"QUESTION: {question}\n" \
-               f"RESPONSE:"
-
     # Irrelevant intent will engage with the user and encourage a question about data.world
-    elif any(keyword in intention.lower() for keyword in MISC_INTENTS):
+    if any(keyword in intention.lower() for keyword in MISC_INTENTS):
         return \
-            f"INSTRUCTIONS: You are a support bot for data.world. Engage in a friendly conversation and answer any question the user has, let them know that you would like to help them understand the platform.\n" \
+            f"INSTRUCTIONS: You are a support bot for data.world. Engage in a friendly conversation and respond to the user! Let them know that you would like to help them understand the platform.\n" \
             f"QUESTION: {question}\n" \
             f"RESPONSE:"
+
+    # Check if AI is confident in its response
+    elif max_similarity < confidence_threshold:
+
+        # Low confidence suggests to check the docs directly and reach out to the support team
+        return f"INSTRUCTIONS: You are a support bot for data.world. Engage in a friendly conversation but for this particular question, recommend the user to reword their prompt or reach out to the support team for personalized assistance: https://support.data.world\n" \
+               f"QUESTION: {question}\n" \
+               f"RESPONSE:"
 
     # Check if the user's input contains keywords indicating a question
     elif any(keyword in question.lower() for keyword in QUESTION_KEYWORDS):
