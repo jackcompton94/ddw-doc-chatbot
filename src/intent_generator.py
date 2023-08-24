@@ -1,4 +1,5 @@
 import openai
+import string
 
 
 def get_intent(question):
