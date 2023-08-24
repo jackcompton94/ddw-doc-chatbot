@@ -22,11 +22,12 @@ def get_response(question, embeddings_df):
         # Generate the appropriate prompt for the user's question
         prompt = response_generator.get_best_response(question, intention, embeddings_df, embed_question, embed_intention)
 
+        # # Testing gpt 3.5
+        # # Add bot's prompt to the conversation
+        # conversation.append({"role": "system", "content": prompt})
+        #
         # # Add user's input to the conversation
         # conversation.append({"role": "user", "content": question})
-        #
-        # # Add bot's prompt to the conversation
-        # conversation.append({"role": "assistant", "content": prompt})
         #
         # # Generate response from OpenAI in a conversation context
         # response = openai.ChatCompletion.create(
@@ -36,8 +37,9 @@ def get_response(question, embeddings_df):
         #     temperature=0
         # )
         #
-        # # Extract the assistant's response
+        # # Extract the assistant's response and append to conversation
         # assistant_response = response.choices[0].message['content']
+        # conversation.append({"role": "assistant", "content": assistant_response})
         #
         # # Return the generated response
         # return assistant_response.strip()
