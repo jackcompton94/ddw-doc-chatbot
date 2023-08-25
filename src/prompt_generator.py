@@ -22,7 +22,7 @@ def generate_prompt(question, intention, max_similarity, best_title, best_respon
     # Irrelevant intent will engage with the user and encourage a question about data.world
     if any(keyword in intention.lower() for keyword in MISC_INTENTS):
         return \
-            f"INSTRUCTIONS: You are a support bot for data.world. Engage in a friendly conversation and respond to the user! Let them know that you would like to help them understand the platform.\n" \
+            f"INSTRUCTIONS: You are a support bot for data.world. Engage in a friendly conversation and respond to the user. Let them know that you would like to help them understand the platform.\n" \
             f"QUESTION: {question}\n" \
             f"RESPONSE:"
 
@@ -38,7 +38,7 @@ def generate_prompt(question, intention, max_similarity, best_title, best_respon
     elif any(keyword in question.lower() for keyword in QUESTION_KEYWORDS):
         return \
             f"DOCUMENTATION: {best_title} {best_response}\n URL:{best_url}\n" \
-            f"INSTRUCTIONS: You are a support bot for data.world. Review the intention below and support your response with relevant information from the documentation above and provide the URL for reference.\n" \
+            f"INSTRUCTIONS: You are a support bot for data.world. Review the intention and question below, and support your response with relevant information from the documentation above by providing helpful guidance to the user. Finally, provide the URL for reference.\n" \
             f"INTENTION: {intention}\n QUESTION: {question}\n" \
             f"RESPONSE:"
 
@@ -46,7 +46,7 @@ def generate_prompt(question, intention, max_similarity, best_title, best_respon
     elif any(keyword in question.lower() for keyword in COMMAND_KEYWORDS):
         return \
             f"DOCUMENTATION: {best_title} {best_response}\n URL:{best_url}\n" \
-            f"INSTRUCTIONS: You are a support bot for data.world. Review the intention below and engage in a friendly conversation and offer assistance by answering the question below. If the user asks about functionality, features, or how to perform certain tasks, provide step-by-step guidance by using the documentation above to support your response and provide the URL for reference.\n" \
+            f"INSTRUCTIONS: You are a support bot for data.world. Review the intention and question below, and engage in a friendly conversation by offer assistance when addressing the question below by using the documentation above to support your response. Finally, provide the URL for reference.\n" \
             f"INTENTION: {intention}\n QUESTION: {question}\n" \
             f"RESPONSE:"
 
@@ -59,12 +59,12 @@ def generate_prompt(question, intention, max_similarity, best_title, best_respon
             f"RESPONSE:"
 
 
-def get_best_response(question, intention, embeddings_df, embed_question, embed_intention):
+def get_best_document(question, intention, embeddings_df, embed_question, embed_intention):
     best_idx, max_similarity = similarity_calculator.calculate_max_similarity(embed_question, embed_intention, embeddings_df)
 
     # Get the title and content with the highest similarity score
-    best_response = embeddings_df.loc[best_idx, 'content']
+    best_content = embeddings_df.loc[best_idx, 'content']
     best_title = embeddings_df.loc[best_idx, 'title']
     best_url = embeddings_df.loc[best_idx, 'url']
 
-    return generate_prompt(question, intention, max_similarity, best_title, best_response, best_url)
+    return generate_prompt(question, intention, max_similarity, best_title, best_content, best_url)

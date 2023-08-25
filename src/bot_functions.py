@@ -1,13 +1,11 @@
 import openai
-from src import util
-from src import intent_generator
-from src import response_generator
+from src import util, intent_generator, prompt_generator
 
 
 def get_response(question, embeddings_df):
     try:
         # Preprocess users question to replace data.world specific shorthand with documented terms
-        question = util.preprocess_question(question)
+        question = util.preprocess_question(question.lower())
 
         # Get the intent from the user's query
         intention = intent_generator.get_intent(question)

@@ -23,6 +23,7 @@ def calculate_max_similarity(embed_question, embed_intention, embeddings_df):
         # Weights to tune the importance of either the title, content, or intention (total = 1.0)
         title_weight = 0.3
         content_weight = 0.5
+        intention_weight = 0.2
 
         # Normalize the intention similarity scores
         normalized_similarity_intention_title = (similarity_intention_title + 1) / 2
@@ -32,7 +33,7 @@ def calculate_max_similarity(embed_question, embed_intention, embeddings_df):
         normalized_combined_intention = (normalized_similarity_intention_title + normalized_similarity_intention_content) / 2
 
         # Weights for normalized intention similarity
-        intention_weight = 0.2 * normalized_combined_intention
+        intention_weight *= normalized_combined_intention
 
         # Combine the similarity scores
         combined_similarity = (
