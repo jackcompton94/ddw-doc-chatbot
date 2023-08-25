@@ -12,7 +12,7 @@ def get_response(question, embeddings_df):
     global total_tokens
     try:
         # Preprocess users question to replace data.world specific shorthand with documented terms
-        question = util.preprocess_question(question)
+        question = util.preprocess_question(question.lower())
 
         # Get the intent from the user's query
         intention = intent_generator.get_intent(question)
