@@ -47,7 +47,7 @@ def extract_page_content(url, json_file_path):
         }
 
         print(page_data)
-        add_page(page_data, json_file_path)
+        util.add_page(page_data, json_file_path)
         return page_data
 
     finally:
@@ -118,20 +118,3 @@ def scrape_doc_page(doc_url, json_file_path, embeddings_csv_path):
     # Add new or update outdated embeddings
     util.update_embeddings(json_file_path, embeddings_csv_path)
 
-
-# Adds pages in real-time to the JSON (this is just for monitoring)
-def add_page(page, json_file_path):
-    # Read existing JSON data from the file
-    existing_data = []
-    try:
-        with open(json_file_path, 'r') as json_file:
-            existing_data = json.load(json_file)
-    except FileNotFoundError:
-        pass
-
-    # Append the new JSON object to the existing data
-    existing_data.append(page)
-
-    # Write the updated data back to the file
-    with open(json_file_path, 'w') as json_file:
-        json.dump(existing_data, json_file, indent=2)

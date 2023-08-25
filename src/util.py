@@ -87,14 +87,14 @@ def update_embeddings(context_data, csv_file_path):
     max_tokens = 8191
 
     existing_titles = set()  # To keep track of existing titles
+    updated_data = []  # To store updated and new rows
 
-    # Read existing titles from the CSV file
+    # Read existing titles and data from the CSV file
     with open(csv_file_path, mode="r", newline="") as file:
         reader = csv.DictReader(file)
         for row in reader:
             existing_titles.add(row["title"])
-
-    updated_data = []
+            updated_data.append(row)
 
     json_file = load_json(context_data)
 
@@ -111,17 +111,15 @@ def update_embeddings(context_data, csv_file_path):
             content_embedding = get_embedding(content)
 
             if title in existing_titles:
-                # Update the corresponding row with new data
-                existing_titles.remove(title)  # Remove the old title
-                updated_data.append({
-                    "title": title,
-                    "content": content,
-                    "url": url,
-                    "title_embedding": title_embedding,
-                    "content_embedding": content_embedding
-                })
-                print("updating embeddings for:", title)
+                # Update the corresponding row with new embeddings
+                for existing_row in updated_data:
+                    if existing_row["title"] == title:
+                        existing_row["title_embedding"] = title_embedding
+                        existing_row["content_embedding"] = content_embedding
+                        print("Updating embeddings for:", title)
+                        break
             else:
+                # Add a new row with embeddings
                 updated_data.append({
                     "title": title,
                     "content": content,
@@ -129,12 +127,12 @@ def update_embeddings(context_data, csv_file_path):
                     "title_embedding": title_embedding,
                     "content_embedding": content_embedding
                 })
-                print("saving new embeddings:", title)
+                print("Saving new embeddings:", title)
 
             # Add the new title to the set of existing titles
             existing_titles.add(title)
 
-    # Rewrite the entire CSV file with updated data
+    # Write the updated and new rows back to the CSV file
     with open(csv_file_path, mode="w", newline="") as file:
         header = ["title", "content", "url", "title_embedding", "content_embedding"]
         writer = csv.DictWriter(file, fieldnames=header)
@@ -142,9 +140,29 @@ def update_embeddings(context_data, csv_file_path):
         writer.writerows(updated_data)
 
 
+# Adds pages in real-time to the JSON (this is just for monitoring)
+def add_page(page, json_file_path):
+    # Read existing JSON data from the file
+    existing_data = []
+    try:
+        with open(json_file_path, 'r') as json_file:
+            existing_data = json.load(json_file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        # Handle if the file is empty or not valid JSON
+        pass
+
+    # Append the new JSON object to the existing data
+    existing_data.append(page)
+
+    # Write the updated data back to the file
+    with open(json_file_path, 'w') as json_file:
+        json.dump(existing_data, json_file, indent=2)
+
+
 # Replace data.world specific terms/context to help tune the prompt engine
 def preprocess_question(question):
     question = question.replace("collector", "metadata collector")
+    question = question.replace("ctk", "catalog toolkit")
 
     if "lineage" in question and "manta" not in question:
         question = question.replace("lineage", "explorer lineage")

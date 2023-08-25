@@ -3,24 +3,36 @@ from flask_cors import CORS
 from src import util
 from src import bot_functions
 from src import config
-from src.crawlers import product_doc_crawler
+from src.crawlers import product_doc_crawler, ctk_doc_crawler
 import openai
 
 # Initialize the Flask app with CORS
 app = Flask(__name__)
 CORS(app)
 
-# ######################################## Product Documentation Crawler ########################################
+#---------------------------------------- Product Documentation Crawler ----------------------------------------------#
 # # TODO: Add the parent URL from which to begin crawl
 # product_doc_url = 'https://docs.data.world/en/160693-using-hoots-and-bb-bots-for-data-ops.html'
 #
-# # TODO: Name a json_file to embed from and the embeddings csv to append to
-# json_file_path = '.data/jsons/bb_bot_scrape.json'
-# embeddings_csv_path = '.data/csvs/embeddings.csv'
+# # TODO: Name a JSON to embed from and the embeddings CSV to append to
+# json_file_path = './data/jsons/'
+# embeddings_csv_path = './data/csvs/embeddings.csv'
 #
 # # Crawl, scrape, embed, and store a doc page locally
 # product_doc_crawler.scrape_doc_page(product_doc_url, json_file_path, embeddings_csv_path)
 
+#---------------------------------------- CTK Documentation Crawler --------------------------------------------------#
+# # TODO: Add the URL to start with
+# ctk_doc_url = 'https://implementation.data.world/docs/about-catalog-configuration'
+#
+# # TODO: Name a json_file to embed from and the embeddings CSV to append to
+# json_file_path = './data/jsons/ctk_scrape.json'
+# embeddings_csv_path = './data/csvs/embeddings.csv'
+#
+# # Crawl, scrape, embed, and store a doc page locally
+# ctk_doc_crawler.scrape_doc_page(ctk_doc_url, json_file_path, embeddings_csv_path)
+
+#---------------------------------------------------------------------------------------------------------------------#
 # Load embeddings into DataFrame at runtime
 embeddings_df = util.load_embeddings_to_df('data/csvs/embeddings.csv')
 
