@@ -5,9 +5,11 @@ from src import response_generator
 
 # Initialize an empty conversation
 conversation = []
+total_tokens = 0
 
 
 def get_response(question, embeddings_df):
+    global total_tokens
     try:
         # Preprocess users question to replace data.world specific shorthand with documented terms
         question = util.preprocess_question(question)
@@ -22,24 +24,41 @@ def get_response(question, embeddings_df):
         # Generate the appropriate prompt for the user's question
         prompt = response_generator.get_best_response(question, intention, embeddings_df, embed_question, embed_intention)
 
-        # # Testing gpt 3.5
-        # # Add bot's prompt to the conversation
-        # conversation.append({"role": "system", "content": prompt})
+        # # Generate response from gpt 3.5
+        # max_tokens = 4096
+        #
+        # # Initialize conversation history
+        # conversation = [{"role": "system", "content": prompt}]
         #
         # # Add user's input to the conversation
         # conversation.append({"role": "user", "content": question})
         #
-        # # Generate response from OpenAI in a conversation context
-        # response = openai.ChatCompletion.create(
-        #     model="gpt-3.5-turbo",
-        #     messages=conversation,
-        #     max_tokens=250,
-        #     temperature=0
-        # )
+        # while True:
+        #     # Generate response from OpenAI in a conversation context
+        #     response = openai.ChatCompletion.create(
+        #         model="gpt-3.5-turbo",
+        #         messages=conversation,
+        #         max_tokens=1024,
+        #         temperature=0
+        #     )
         #
-        # # Extract the assistant's response and append to conversation
-        # assistant_response = response.choices[0].message['content']
-        # conversation.append({"role": "assistant", "content": assistant_response})
+        #     # Extract the assistant's response
+        #     assistant_response = response.choices[0].message['content']
+        #
+        #     # Calculate token usage
+        #     total_tokens = response['usage']['total_tokens']
+        #     print("Tokens used:", total_tokens)
+        #
+        #     # Check if the response exceeds available tokens
+        #     if total_tokens > max_tokens:
+        #         # Remove oldest message(s) to free up tokens
+        #         conversation.pop(1)  # Remove the oldest user message
+        #         if len(conversation) > 2 and conversation[1]['role'] == "assistant":
+        #             conversation.pop(1)  # Remove the oldest assistant message
+        #     else:
+        #         # Add assistant's response to conversation
+        #         conversation.append({"role": "assistant", "content": assistant_response})
+        #         break  # Exit the loop as the response is within token limits
         #
         # # Return the generated response
         # return assistant_response.strip()
@@ -56,5 +75,6 @@ def get_response(question, embeddings_df):
         return response.choices[0].text.strip()
 
     except openai.error.OpenAIError as e:
+        print(e)
         error_message = "Invalid token or an error occurred while communicating with OpenAI."
         return error_message
