@@ -40,10 +40,11 @@ embeddings_df = util.load_embeddings_to_df('data/csvs/embeddings.csv')
 @app.route('/get_response', methods=['POST'])
 def get_response():
     data = request.get_json()
+    api_key = request.headers.get('Authorization')
     question = data.get('question')
 
     # Authorize the current user
-    openai.api_key = config.OPENAI_KEY
+    openai.api_key = api_key
 
     # Get the bots response
     response = bot_functions.get_response(question, embeddings_df)
