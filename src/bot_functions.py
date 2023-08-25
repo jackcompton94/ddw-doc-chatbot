@@ -15,7 +15,7 @@ def get_response(question, embeddings_df):
         embed_intention = util.get_embedding(intention)
 
         # Generate the appropriate prompt for the user's question
-        prompt = response_generator.get_best_response(question, intention, embeddings_df, embed_question, embed_intention)
+        prompt = prompt_generator.get_best_document(question, intention, embeddings_df, embed_question, embed_intention)
 
         # Generate response from OpenAI
         response = openai.Completion.create(

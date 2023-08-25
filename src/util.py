@@ -1,5 +1,13 @@
 import pandas as pd
+import openai
 from ast import literal_eval
+
+
+# Gets the embedding of a text string
+def get_embedding(text):
+    model = "text-embedding-ada-002"
+    text = text.replace("\n", " ")
+    return openai.Embedding.create(input=[text], model=model)['data'][0]['embedding']
 
 
 # Load CSV and convert embedding columns to list objects
