@@ -59,12 +59,12 @@ def generate_prompt(question, intention, max_similarity, best_title, best_respon
             f"RESPONSE:"
 
 
-def get_best_response(question, intention, embeddings_df, embed_question, embed_intention):
+def get_best_document(question, intention, embeddings_df, embed_question, embed_intention):
     best_idx, max_similarity = similarity_calculator.calculate_max_similarity(embed_question, embed_intention, embeddings_df)
 
     # Get the title and content with the highest similarity score
-    best_response = embeddings_df.loc[best_idx, 'content']
+    best_content = embeddings_df.loc[best_idx, 'content']
     best_title = embeddings_df.loc[best_idx, 'title']
     best_url = embeddings_df.loc[best_idx, 'url']
 
-    return generate_prompt(question, intention, max_similarity, best_title, best_response, best_url)
+    return generate_prompt(question, intention, max_similarity, best_title, best_content, best_url)

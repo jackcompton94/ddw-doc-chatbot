@@ -3,24 +3,31 @@ from flask_cors import CORS
 from src import util
 from src import bot_functions
 from src import config
-from src import crawler
+from src.crawlers import product_doc_crawler
 import openai
 
 # Initialize the Flask app with CORS
 app = Flask(__name__)
 CORS(app)
 
+# ######################################## Product Documentation Crawler ########################################
+# # TODO: Add the parent URL from which to begin crawl
+# product_doc_url = 'https://docs.data.world/en/160693-using-hoots-and-bb-bots-for-data-ops.html'
+#
+# # TODO: Name a json_file to embed from and the embeddings csv to append to
+# json_file_path = '.data/jsons/bb_bot_scrape.json'
+# embeddings_csv_path = '.data/csvs/embeddings.csv'
+#
 # # Crawl, scrape, embed, and store a doc page locally
-# crawler.scrape_doc_page('https://docs.data.world/en/160693-using-hoots-and-bb-bots-for-data-ops.html')
+# product_doc_crawler.scrape_doc_page(product_doc_url, json_file_path, embeddings_csv_path)
 
 # Load embeddings into DataFrame at runtime
-embeddings_df = util.load_embeddings_to_df('./csvs/embeddings.csv')
+embeddings_df = util.load_embeddings_to_df('data/csvs/embeddings.csv')
 
 
 @app.route('/get_response', methods=['POST'])
 def get_response():
     data = request.get_json()
-    api_key = request.headers.get('Authorization')
     question = data.get('question')
 
     # Authorize the current user

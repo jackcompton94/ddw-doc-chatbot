@@ -111,17 +111,15 @@ def fetch_links_from_page(url, json_file_path):
         driver.quit()
 
 
-def scrape_doc_page(doc_url):
-    # Named json_file to embed from and the embeddings csv to append to
-    json_file_path = './jsons/bb_bot_scrape.json'
-    embeddings_csv_path = './csvs/embeddings.csv'
-
+def scrape_doc_page(doc_url, json_file_path, embeddings_csv_path):
     # Recursively crawls through each main doc link and extracts the page content
     fetch_links_from_page(doc_url, json_file_path)
 
+    # Add new or update outdated embeddings
     util.update_embeddings(json_file_path, embeddings_csv_path)
 
 
+# Adds pages in real-time to the JSON (this is just for monitoring)
 def add_page(page, json_file_path):
     # Read existing JSON data from the file
     existing_data = []

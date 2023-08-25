@@ -1,7 +1,7 @@
 import openai
 from src import util
 from src import intent_generator
-from src import response_generator
+from src import prompt_generator
 
 # Initialize an empty conversation
 conversation = []
@@ -22,7 +22,7 @@ def get_response(question, embeddings_df):
         embed_intention = util.get_embedding(intention)
 
         # Generate the appropriate prompt for the user's question
-        prompt = response_generator.get_best_response(question, intention, embeddings_df, embed_question, embed_intention)
+        prompt = prompt_generator.get_best_document(question, intention, embeddings_df, embed_question, embed_intention)
 
         # # Generate response from gpt 3.5
         # max_tokens = 4096

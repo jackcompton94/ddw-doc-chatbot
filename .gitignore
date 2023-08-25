@@ -1,8 +1,8 @@
 # created by virtualenv automatically
 bin/
-csvs/
+data/csvs/
 include/
-jsons/
+data/jsons/
 lib/
 share/
 pyvenv.cfg
