@@ -4,13 +4,10 @@ import string
 
 def get_intent(question):
     content = (
-        "You are an intent classifier bot trained to assist a support bot by generating intents that guide it to relevant documentation."
-        "\n\nINSTRUCTIONS:\n"
-        "- Focus on crafting a clear, succinct intent in 3 words or less that captures the main topic of the user query.\n"
-        "- Consider specific examples to cover a variety of intents and topics.\n"
-        "- The generated intent will serve as a guide for the support bot to locate documentation.\n"
-        "- Emphasize the importance of identifying keywords that are likely to appear in documentation.\n"
-        "\n\nRESPONSE:\n"
+        "You are an intent classifier trained to assist a support bot by generating 3 word (or less) intents that guide it to relevant documentation." 
+        "\nFor example, 'Hello' == 'greeting', 'What is a hammer' == 'hammer definition', 'How do I use a hammer' == 'hammer guide', 'Send me hammer documentation' == 'hammer documentation'"
+        "\nIf you cannot determine an intent, use 'unclear'"
+        "\nBe concise as possible, yet capture the main idea of the user's query. Consider how your intent could be used by the support bot to locate accurate documentation."
     )
 
     # Generate response from OpenAI

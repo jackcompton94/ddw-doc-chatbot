@@ -1,8 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from src import util
-from src import bot_functions
-from src import config
+from src import util, bot_functions
 from src.crawlers import product_doc_crawler, ctk_doc_crawler
 import openai
 

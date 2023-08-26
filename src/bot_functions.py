@@ -1,9 +1,7 @@
 import openai
-from src import util
-from src import intent_generator
-from src import prompt_generator
+from src import util, intent_generator, prompt_generator
 
-# Initialize an empty conversation
+# Initialize an empty conversation and tokens for ask_gpt_turbo
 conversation = []
 total_tokens = 0
 
@@ -44,8 +42,6 @@ def ask_davinci(prompt):
         return error_message
 
 
-# TODO: Work on this implementation by experimenting with prompts that encourage the bot to get more info until the similarity score is high enough
-# TODO: If the score is HIGH then we will use that documentation to find the answer for the user without looking for more context
 def ask_gpt_turbo(prompt):
     global total_tokens
     max_tokens = 4096
