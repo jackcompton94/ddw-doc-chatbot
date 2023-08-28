@@ -42,6 +42,7 @@ def ask_davinci(prompt):
         return error_message
 
 
+# Testing only
 def ask_gpt_turbo(prompt):
     global total_tokens
     max_tokens = 4096
