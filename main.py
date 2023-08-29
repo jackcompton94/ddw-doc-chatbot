@@ -4,7 +4,6 @@ from src import util, bot_functions
 from src.crawlers import product_doc_crawler, ctk_doc_crawler
 import openai
 import os
-from dotenv import load_dotenv
 
 # Get env variables from Heroku
 DW_PORT = os.getenv("PORT", 5000)
