@@ -6,9 +6,6 @@ import openai
 import pandas as pd
 
 
-openai.api_key = config.OPENAI_KEY
-
-
 # Loads a JSON file into memory
 def load_json(file_path):
     with open(file_path, 'r') as json_file:

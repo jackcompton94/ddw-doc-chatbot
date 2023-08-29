@@ -23,7 +23,4 @@ def get_intent(question):
 
     intent = response.choices[0].message['content'].translate(str.maketrans('', '', string.punctuation))
 
-    # TODO: Log intent and move to dataset for persistence
-    print(f"intent: {intent.lower()}")
-
     return intent
