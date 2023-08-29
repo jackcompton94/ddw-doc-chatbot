@@ -5,8 +5,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from bs4 import BeautifulSoup
 from src import util
-import json
-import os
 
 
 def extract_data_from_page(driver, json_file_path):

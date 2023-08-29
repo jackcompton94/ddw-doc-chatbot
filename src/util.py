@@ -1,7 +1,6 @@
 import csv
 import json
 from ast import literal_eval
-from src import config
 import openai
 import pandas as pd
 

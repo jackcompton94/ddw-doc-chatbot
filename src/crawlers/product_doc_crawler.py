@@ -5,7 +5,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from src import util
 import time
-import json
 
 
 def extract_page_content(url, json_file_path):
