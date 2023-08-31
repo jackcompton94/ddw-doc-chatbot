@@ -36,7 +36,7 @@ def generate_prompt(question, intention, max_similarity, best_title, best_conten
     elif any(keyword in question.lower() for keyword in QUESTION_KEYWORDS):
         return \
             f"DOCUMENTATION: {best_title} {best_content}\n URL:{best_url}\n" \
-            f"INSTRUCTIONS: You are a support bot for data.world. Provide a comprehensive answer to the users question. Utilize the documentation above and deliver a thorough response, make sure to address all aspects of the user's query. Include relevant examples, details, and explanations from the provided documentation and provide the URL.\n" \
+            f"INSTRUCTIONS: You are a support bot for data.world speaking with a user in a chatbox. Provide a comprehensive answer to the users question. Utilize the documentation above and deliver a thorough response, make sure to address all aspects of the user's query. Include relevant examples, details, and explanations from the provided documentation and provide the URL.\n" \
             f"INTENTION: {intention}\n QUESTION: {question}\n" \
             f"RESPONSE:"
 

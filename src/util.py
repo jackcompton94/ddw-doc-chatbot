@@ -4,7 +4,7 @@ from ast import literal_eval
 import openai
 import pandas as pd
 
-
+openai.api_key = "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"
 # Loads a JSON file into memory
 def load_json(file_path):
     with open(file_path, 'r') as json_file:

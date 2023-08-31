@@ -49,7 +49,4 @@ def calculate_max_similarity(embed_question, embed_intention, embeddings_df):
     best_idx = np.argmax(similarities)
     max_similarity = max(similarities)
 
-    # TODO: Log to console the max similarity score
-    print(f"max similarity: {max_similarity}")
-
     return best_idx, max_similarity
