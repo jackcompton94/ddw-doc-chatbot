@@ -3,19 +3,21 @@ import string
 
 
 def get_intent(question):
-    content = (
-        "You are an intent classifier trained to assist a support bot by generating 3 word (or less) intents that guide it to relevant documentation." 
-        "\nFor example, 'Hello' == 'greeting', 'What is a hammer' == 'hammer definition', 'How do I use a hammer' == 'hammer guide', 'Send me hammer documentation' == 'hammer documentation'"
-        "\nIf you cannot determine an intent, use 'unclear'"
-        "\nBe concise as possible, yet capture the main idea of the user's query. Consider how your intent could be used by the support bot to locate accurate documentation."
-    )
+    content = \
+        f"""
+        Classify the text below, delimited by three dashes (-), by its intent only. 
+        For example, 'Hello' == 'greeting', 'What is a hammer' == 'hammer definition', 'How do I use a hammer' == 'hammer guide', 'Send me hammer documentation' == 'hammer documentation'
+        If you cannot determine an intent, use 'unclear'
+        ---
+        {question}
+        ---
+        """
 
     # Generate response from OpenAI
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": content},
-            {"role": "user", "content": question},
+            {"role": "user", "content": content}
         ],
         max_tokens=60,
         temperature=0
