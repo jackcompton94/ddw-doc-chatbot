@@ -5,9 +5,10 @@ import string
 def get_intent(question):
     content = \
         f"""
-        Classify the text below, delimited by three dashes (-), by its intent only. 
-        For example, 'Hello' == 'greeting', 'What is a hammer' == 'hammer definition', 'How do I use a hammer' == 'hammer guide', 'Send me hammer documentation' == 'hammer documentation'
-        If you cannot determine an intent, use 'unclear'
+        Generate in 3 words (or less), an intent from the text below, delimited by three dashes (-), that could guide one to finding relevant documentation.
+        \nFor example, 'Hello' == 'greeting', 'What is a hammer' == 'hammer definition', 'How do I use a hammer' == 'hammer guide', 'Send me hammer documentation' == 'hammer documentation'
+        \nIf you cannot determine an intent, use 'unclear'
+        \nBe concise as possible, yet capture the main idea. Consider how your intent could be used by a support bot to locate accurate documentation.
         ---
         {question}
         ---
