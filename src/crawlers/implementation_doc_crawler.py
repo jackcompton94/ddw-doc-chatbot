@@ -25,7 +25,7 @@ def extract_data_from_page(driver, json_file_path):
 
 
 def crawl_pages(start_url, json_file_path):
-    stop_condition = 'Onboarding Introduction'
+    stop_condition = 'Metrics and audit'
     options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     driver = webdriver.Chrome(options=options)

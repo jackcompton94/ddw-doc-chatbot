@@ -1,9 +1,15 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from src import util, bot_functions
-from src.crawlers import product_doc_crawler, ctk_doc_crawler
+from src.crawlers import product_doc_crawler, implementation_doc_crawler
 import openai
 import os
+
+ctk_doc_url = ""
+json_file_path = ""
+embeddings_csv_path = ""
+
+implementation_doc_crawler.scrape_doc_page()
 
 # Get env variables from Heroku
 DW_PORT = os.getenv("PORT", 5000)
